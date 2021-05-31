@@ -1,0 +1,10 @@
+/* global styles */
+
+h1::after {
+  content: '';
+  display: block;
+  margin: 0 auto;
+  background-color: white;
+  width: 32px;
+  height: 2px;
+}

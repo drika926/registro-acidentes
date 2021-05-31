@@ -1,0 +1,3 @@
+[submodule "vuedocker"]
+	path = vuedocker
+	url = https://github.com/georgetassiano/vuedocker.git
