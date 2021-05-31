@@ -13,7 +13,7 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>{{ $auth.user.name }}</v-list-item-title>
+            <v-list-item-title>Olá Usuário</v-list-item-title>
             <v-list-item-subtitle class="exit mt-2" @click="logout">
               sair
             </v-list-item-subtitle>
@@ -62,7 +62,6 @@
 <script>
 export default {
   name: 'Default',
-  middleware: 'auth',
   data () {
     return {
       drawer: false,
@@ -74,19 +73,16 @@ export default {
         },
         {
           icon: 'mdi-account',
-          title: 'Alunos',
-          to: '/students'
+          title: 'Registro de acidentes',
+          to: '/acidentes'
         }
       ],
-      title: 'Grupo A'
+      title: 'Registro de Acidentes'
     }
   },
   methods: {
     logout () {
-      this.$auth.logout()
-        .then(() => {
-          this.router.push('/login')
-        })
+      //
     }
   }
 }

@@ -12,18 +12,18 @@
     <v-data-table
       :items-per-page.sync="perPage"
       :headers="headers"
-      :items="students"
+      :items="acidentes"
       :search="search"
       :loading="loading"
       :page.sync="page"
       loading-text="Carregando dados... aguarde"
-      @update:items-per-page="updateStudents"
+      @update:items-per-page="updateAcidentes"
     >
       <template #top>
         <v-toolbar
           flat
         >
-          <v-toolbar-title>Alunos</v-toolbar-title>
+          <v-toolbar-title>Acidentes</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
@@ -42,7 +42,7 @@
                 v-bind="attrs"
                 v-on="on"
               >
-                Novo Aluno
+                Novo Acidente
               </v-btn>
             </template>
             <v-card>
@@ -59,7 +59,7 @@
                       md="4"
                     >
                       <v-text-field
-                        v-model="editedItem.name"
+                        v-model="editedItem.nome"
                         label="Nome"
                       />
                     </v-col>
@@ -69,8 +69,8 @@
                       md="4"
                     >
                       <v-text-field
-                        v-model="editedItem.email"
-                        label="email"
+                        v-model="editedItem.rodovia"
+                        label="Rodovia"
                       />
                     </v-col>
                     <v-col
@@ -79,8 +79,8 @@
                       md="4"
                     >
                       <v-text-field
-                        v-model="editedItem.cpf"
-                        label="CPF"
+                        v-model="editedItem.cidade"
+                        label="Cidade"
                         :disabled="editedIndex !== -1"
                       />
                     </v-col>
@@ -90,8 +90,8 @@
                       md="4"
                     >
                       <v-text-field
-                        v-model="editedItem.ra"
-                        label="RA"
+                        v-model="editedItem.Estado"
+                        label="Estado"
                         :disabled="editedIndex !== -1"
                       />
                     </v-col>
@@ -121,7 +121,7 @@
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
               <v-card-title class="headline">
-                você tem certeza que deseja excluir esse aluno?
+                você tem certeza que deseja excluir esse acidente?
               </v-card-title>
               <v-card-actions>
                 <v-spacer />
@@ -155,7 +155,7 @@
       <template #no-data>
         <v-btn
           color="primary"
-          @click="updateStudents"
+          @click="updateAcidentes"
         >
           Resetar
         </v-btn>
@@ -164,7 +164,7 @@
     <v-pagination
       v-model="page"
       :length="meta === undefined ? 0 : meta.links.length"
-      @input="updateStudents"
+      @input="updateAcidentes"
     />
   </v-card>
 </template>
@@ -172,16 +172,20 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 export default {
-  name: 'Students',
+  name: 'Acidentes',
   data: () => ({
     page: 0,
     search: '',
     headers: [
-      { text: 'RA', value: 'ra' },
-      { text: 'Nome', value: 'name' },
-      { text: 'E-mail', value: 'email' },
-      { text: 'CPF', value: 'cpf' },
-      { text: 'Actions', value: 'actions', sortable: false, filterable: false }
+      { text: 'Nome', value: 'nome' },
+      { text: 'Idade', value: 'idade' },
+      { text: 'Sexo', value: 'sexo' },
+      { text: 'Rodovia', value: 'rodovia' },
+      { text: 'Cidade', value: 'cidade' },
+      { text: 'Estado', value: 'estado' },
+      { text: 'Latitude', value: 'latitude' },
+      { text: 'Longitude', value: 'longitude' },
+      { text: 'Ações', value: 'actions', sortable: false, filterable: false }
     ],
     perPage: 10,
     dialogDelete: false,
@@ -189,27 +193,35 @@ export default {
     editedIndex: -1,
     editedItem: {
       id: 0,
-      name: '',
-      cpf: 0,
-      email: 0,
-      ra: 0
+      nome: '',
+      idade: 0,
+      sexo: 0,
+      rodovia: '',
+      cidade: '',
+      estado: '',
+      latitude: '',
+      longitude: ''
     },
     defaultItem: {
       id: 0,
-      name: '',
-      cpf: 0,
-      email: 0,
-      ra: 0
+      nome: '',
+      idade: 0,
+      sexo: 0,
+      rodovia: '',
+      cidade: '',
+      estado: '',
+      latitude: '',
+      longitude: ''
     },
     loading: false
   }),
   computed: {
     ...mapGetters({
-      students: 'students/students',
-      meta: 'students/meta'
+      acidentes: 'acidentes/acidentes',
+      meta: 'acidentes/meta'
     }),
     formTitle () {
-      return this.editedIndex === -1 ? 'Novo Aluno' : 'Editar Aluno'
+      return this.editedIndex === -1 ? 'Novo Acidente' : 'Editar Acidente'
     }
   },
   watch: {
@@ -222,34 +234,22 @@ export default {
   },
   mounted () {
     this.loading = true
-    this.getStudents({ perPage: this.perPage, page: this.page })
-      .then(() => {
-        this.loading = false
-      })
-      .catch((error) => {
-        if (error) {
-          this.loading = false
-        }
-      })
+    setTimeout(() => {
+      this.loading = false
+    }, 3000)
   },
   methods: {
     ...mapActions({
-      getStudents: 'students/getStudents',
-      deleteStudent: 'students/deleteStudent',
-      saveStudent: 'students/saveStudent',
-      updateStudent: 'students/updateStudent'
+      getAcidentes: 'acidentes.js/getAcidentes',
+      deleteAcidente: 'acidentes.js/deleteAcidente',
+      saveAcidente: 'acidentes.js/saveAcidente',
+      updateAcidente: 'acidentes.js/updateAcidente'
     }),
-    updateStudents () {
+    updateAcidentes () {
       this.loading = true
-      this.getStudents({ page: this.page, perPage: this.perPage === -1 ? this.meta.total : this.perPage })
-        .then(() => {
-          this.loading = false
-        })
-        .catch((error) => {
-          if (error) {
-            this.loading = false
-          }
-        })
+      setTimeout(() => {
+        this.loading = false
+      }, 3000)
     },
     editItem (item) {
       this.editedIndex = this.students.indexOf(item)
@@ -265,16 +265,10 @@ export default {
 
     deleteItemConfirm () {
       this.loading = true
-      this.deleteStudent(this.editedItem.id)
-        .then(() => {
-          this.loading = false
-          this.updateStudents()
-        })
-        .catch((error) => {
-          if (error) {
-            this.loading = false
-          }
-        })
+      this.deleteAcidente(this.editedItem.id)
+      setTimeout(() => {
+        this.loading = false
+      }, 3000)
       this.closeDelete()
     },
 
@@ -298,28 +292,16 @@ export default {
       if (this.editedIndex > -1) {
         this.loading = true
         this.editedItemProps = { name: this.editedItem.name, email: this.editedItem.email }
-        this.updateStudent({ student: this.editedItemProps, studentIndex: this.editedItem.id })
-          .then(() => {
-            this.loading = false
-            this.updateStudents()
-          })
-          .catch((error) => {
-            if (error) {
-              this.loading = false
-            }
-          })
+        this.updateAcidente({ student: this.editedItemProps, studentIndex: this.editedItem.id })
+        setTimeout(() => {
+          this.loading = false
+        }, 3000)
       } else {
         this.loading = true
-        this.saveStudent(this.editedItem)
-          .then(() => {
-            this.loading = false
-            this.updateStudents()
-          })
-          .catch((error) => {
-            if (error) {
-              this.loading = false
-            }
-          })
+        this.saveAcidente(this.editedItem)
+        setTimeout(() => {
+          this.loading = false
+        }, 3000)
       }
       this.close()
     }
